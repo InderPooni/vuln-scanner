@@ -14,6 +14,8 @@ type Database struct {
 	db *sql.DB
 }
 
+var _ DataStore = &Database{}
+
 func NewDatabase() (*Database, error) {
 	db, err := sql.Open("sqlite3", "data.db")
 	if err != nil {

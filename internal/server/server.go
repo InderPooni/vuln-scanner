@@ -21,7 +21,7 @@ const (
 // Server represents the HTTP server
 // Server will handle request routing and maintains a db connection
 type Server struct {
-	DB      *database.Database
+	DB      database.DataStore
 	Router  *http.ServeMux
 	Address string
 }

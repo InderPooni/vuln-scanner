@@ -50,10 +50,11 @@ func GenerateBaseURL(input string) (string, error) {
 const requestTimeout = 10 * time.Second
 
 // FetchWithRetry performs an HTTP GET on the URL with retry logic
-func FetchWithExponentialBackoff(url string, attempts int) ([]byte, error) {
+// In utils/fetch.go
+var FetchWithExponentialBackoff = func(url string, attempts int) ([]byte, error) {
 	var lastErr error
-	client := &http.Client{Timeout: requestTimeout}
-	delay := 2 * time.Second
+	client := &http.Client{Timeout: 10 * time.Second} // adjust requestTimeout as needed
+	delay := 1 * time.Second
 
 	for i := 0; i < attempts; i++ {
 		resp, err := client.Get(url)
@@ -68,15 +69,11 @@ func FetchWithExponentialBackoff(url string, attempts int) ([]byte, error) {
 			if err != nil {
 				lastErr = err
 			} else {
-				return data, nil // Success: return the data.
+				return data, nil
 			}
 		}
-
-		// Sleep for the current delay duration before retrying.
 		time.Sleep(delay)
-		// Exponentially increase the delay (e.g., double it)
-		delay *= 2
+		delay *= 2 // Exponential backoff
 	}
-
 	return nil, lastErr
 }
