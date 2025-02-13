@@ -22,7 +22,7 @@ func NewDatabase() (*Database, error) {
 		return nil, err
 	}
 
-	if condition := db.Ping(); condition != nil {
+	if err := db.Ping(); err != nil {
 		return nil, err
 	}
 
